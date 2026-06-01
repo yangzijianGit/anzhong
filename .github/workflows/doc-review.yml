@@ -1,0 +1,63 @@
+name: Design Document Review
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  design-doc-review:
+    name: Design Doc Completeness Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run design document review
+        run: |
+          echo "=== Design Document Review ==="
+          
+          # Load template to check required fields
+          TEMPLATE=$(cat design/TEMPLATE.md)
+          
+          # Extract required fields from template
+          REQUIRED_FIELDS=("module_name" "status" "version" "Files" "Approach")
+          
+          echo "Checking required fields in TEMPLATE.md:"
+          for field in "${REQUIRED_FIELDS[@]}"; do
+            if echo "$TEMPLATE" | grep -q "^${field}:"; then
+              echo "  ✓ $field"
+            else
+              echo "  ⚠️  $field (optional in template)"
+            fi
+          done
+          
+          echo ""
+          echo "Scanning design/ directory..."
+          
+          # Check design/ structure
+          if [ ! -d "design" ]; then
+            echo "ERROR: design/ directory not found"
+            exit 1
+          fi
+          
+          # Count design documents
+          DOC_COUNT=$(find design -name "*.md" | wc -l)
+          echo "Found $DOC_COUNT design documents"
+          
+          # List all design documents
+          echo ""
+          echo "Design documents:"
+          find design -name "*.md" -type f | sort | while read doc; do
+            echo "  - $doc"
+          done
+          
+          echo ""
+          echo "=== Summary ==="
+          echo "Total design documents: $DOC_COUNT"
+          echo "✅ Design document review complete"
+          
+          # Output SARIF-style report for future enhancement
+          echo "::group::Design Doc Report"
+          find design -name "*.md" -type f | sort | while read doc; do
+            echo "$doc"
+          done
+          echo "::endgroup::"

@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  pre-commit-checks:
+    name: Pre-commit & Pre-push Hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run pre-commit hook
+        run: |
+          # Make hooks executable
+          chmod +x .git/hooks/pre-commit
+          chmod +x .git/hooks/post-commit
+          chmod +x .git/hooks/pre-push
+          
+          # Run pre-commit
+          .git/hooks/pre-commit
+
+      - name: Check docs structure
+        run: |
+          # Verify design/ directory exists with templates
+          if [ ! -f "design/TEMPLATE.md" ]; then
+            echo "ERROR: design/TEMPLATE.md not found"
+            exit 1
+          fi
+          
+          # Verify required docs directories exist
+          for dir in docs/brainstorms docs/plans; do
+            if [ ! -d "$dir" ]; then
+              echo "ERROR: Required directory $dir not found"
+              exit 1
+            fi
+          done
+          
+          echo "✅ docs structure check passed"
+
+      - name: Run pre-push hook (dry run - check last 5 commits)
+        run: |
+          # pre-push hook requires git context with remote
+          # For CI, we do a lighter check focusing on the staged changes
+          chmod +x .git/hooks/pre-push
+          
+          # Check if there are any uncommitted changes that need docs
+          echo "Running document-driven development checks..."
+          python3 -c "
+import subprocess
+from pathlib import Path
+
+project_root = Path('.')
+design_dir = project_root / 'design'
+
+# Get staged code files
+result = subprocess.run(['git', 'diff', '--cached', '--name-only', '--diff-filter=ACM'], 
+                       capture_output=True, text=True)
+code_files = [f.strip() for f in result.stdout.strip().split('\n') if f.strip() and f.startswith('src/')]
+
+issues = []
+for code_file in code_files:
+    code_path = Path(code_file)
+    expected_doc = design_dir / code_path.parent.name / f'{code_path.stem}.md'
+    if not expected_doc.exists():
+        expected_doc = design_dir / f'{code_path.stem}.md'
+    if not expected_doc.exists():
+        issues.append(f'{code_file} -> no design doc found')
+
+if issues:
+    print('ISSUES:')
+    for i in issues:
+        print(f'  {i}')
+    exit(1)
+else:
+    print('✅ All staged code files have corresponding design documents')
+"

@@ -1,0 +1,56 @@
+name: Game Build & Test
+
+# Reserved for Unity project build and test pipeline
+# TODO: Fill in once src/ directory has Unity C# code
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  unity-build:
+    name: Unity Build
+    runs-on: ubuntu-latest
+    container:
+      image: registry.hub.docker.com/unity/unity:2022.3 LTS
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Unity project structure
+        run: |
+          echo "Unity project structure check"
+          
+          # Check for essential Unity directories
+          REQUIRED_DIRS=("Assets" "ProjectSettings" "Packages")
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "ERROR: Unity project directory $dir not found"
+              exit 1
+            fi
+            echo "  ✓ $dir"
+          done
+          
+          echo "✅ Unity project structure valid"
+          echo ""
+          echo "NOTE: Full Unity build pipeline pending project code completion"
+
+      # TODO: Add actual Unity build step when src/ has C# code
+      # Example:
+      # - name: Get Unity License
+      #   uses: game-ci/unity-license-action@v4
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      # 
+      # - name: Build players
+      #   uses: game-ci/unity-build-player-action@v4
+      #   with:
+      #     buildTarget: WebGL
+      #     customBuildPath: Build
+      #     customBuildName: anzhong
