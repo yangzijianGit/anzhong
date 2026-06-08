@@ -1,0 +1,134 @@
+{
+  "review_id": "REV-20260609-001-01-planner",
+  "doc_id": "01-overview.md",
+  "doc_version": "v0.1（无version字段）",
+  "reviewer": "策划agent",
+  "reviewer_role": "planner",
+  "review_time": "2026-06-09T00:50:00+08:00",
+  "verdict": "fail",
+  "score": 18,
+  "score_breakdown": {
+    "frontmatter": 4,
+    "meta": 0,
+    "config_table": 8,
+    "edge_cases": 0,
+    "acceptance_criteria": 0,
+    "references": 0,
+    "visual_aids": 0,
+    "risks": 0,
+    "changelog": 0,
+    "one_liner_bonus": 6
+  },
+  "p0_issues": [
+    {
+      "id": "P-ISSUE-001",
+      "type": "missing",
+      "location": "Frontmatter",
+      "description": "YAML Frontmatter 缺 version、status、owner 三个必填字段，无法追溯版本",
+      "suggestion": "补全为：version: v1.0, status: draft, owner: 策划总监"
+    },
+    {
+      "id": "P-ISSUE-002",
+      "type": "non_compliant",
+      "location": "## 一句话介绍",
+      "description": "一句话描述约 95 字，严重违反 ≤30 字约束。Steam 副标题根本塞不下，玩家也记不住",
+      "suggestion": "改写 ≤30 字版本：'无战斗 2D 房间解谜，切换槽位重塑空间开辟通路'（22字，可直接用作 Steam 副标题）"
+    },
+    {
+      "id": "P-ISSUE-003",
+      "type": "vague",
+      "location": "## 基本信息 → 目标用户",
+      "description": "'解谜游戏爱好者、独立游戏玩家、类银河恶魔城轻度玩家'过于泛化，违反'具体人群（年龄/经验/动机）'要求。'广大玩家'式描述",
+      "suggestion": "具体化为：'25-40 岁、玩过 Gorogoa / The Pedestrian / Viewfinder 中至少 1 款、追求'顿悟快感'与 30 分钟可完成一关的休闲解谜玩家'"
+    },
+    {
+      "id": "P-ISSUE-004",
+      "type": "missing",
+      "location": "## 核心特色",
+      "description": "无差异化卖点（USPs）对比表。DOC-STANDARD 2.1 要求'对比至少 2 款同类游戏，明确我们独特在哪'",
+      "suggestion": "新增'## 差异化卖点'章节，建表对比 Gorogoa / The Pedestrian / Viewfinder，按'机制 / 无战斗 / 重塑空间 / 通关时长 / 价格'维度对比，标出'我们独特在哪'"
+    },
+    {
+      "id": "P-ISSUE-005",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'不做什么 (Out of Scope)'章节，DOC-STANDARD 2.1 必填。会导致 scope creep：玩家/制作方不知道边界在哪",
+      "suggestion": "新增'## 不做什么 (Out of Scope)'章节，明确 v1.0 不含战斗、不含成长系统、不含剧情叙事、不含在线/联机、不含内购、不含 Mod 支持"
+    },
+    {
+      "id": "P-ISSUE-006",
+      "type": "missing",
+      "location": "整体",
+      "description": "无 DOC-STANDARD 1.2 规定的 6 个必填章节：目的、范围、配置表、边界条件、验收标准、风险与开放问题",
+      "suggestion": "依次新增：'## 目的 (Purpose)'、'## 范围 (Scope)'、'## 配置表 (Configuration)'、'## 边界条件 (Edge Cases)'（≥5 条）、'## 验收标准 (Acceptance Criteria)'（可勾选 checklist）、'## 风险与开放问题'"
+    }
+  ],
+  "p1_issues": [
+    {
+      "id": "P-ISSUE-007",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'关联文档'区块。01-overview 是总览，应链接到 02/03/11 形成网状结构",
+      "suggestion": "新增'## 关联文档'章节，列出上游（无）、下游（02-core-mechanics.md / 03-level-design.md / 11-release.md）"
+    },
+    {
+      "id": "P-ISSUE-008",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'关联代码模块'区块",
+      "suggestion": "新增链接到未来 src/Room/、src/SwitchSlot/、src/Player/，未实现时写'待创建'"
+    },
+    {
+      "id": "P-ISSUE-009",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'变更日志'表格，无法追溯修改历史",
+      "suggestion": "新增'## 变更日志'表格，初版条目：2026-06-09 v1.0 太子 重写至 DOC-STANDARD 规范"
+    },
+    {
+      "id": "P-ISSUE-010",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'TODO 列表'，未决问题未明确暴露",
+      "suggestion": "新增'## 待办事项'章节，列出：① 主题命名待定 ② 章节数 3 vs 4 待定 ③ 数值待 05 文档确认"
+    },
+    {
+      "id": "P-ISSUE-011",
+      "type": "vague",
+      "location": "## 核心特色",
+      "description": "核心特色 4 条 bullets 没有'独立可验证'：'无战斗''无成长''无死亡惩罚''即时反馈' 是设计主张，但没说要'怎么验证'",
+      "suggestion": "每条加'验收标准'：如'无战斗'对应'全流程无 HP、无敌人 NPC、无战斗动画'"
+    }
+  ],
+  "p2_issues": [
+    {
+      "id": "P-ISSUE-012",
+      "type": "naming",
+      "location": "## 一句话介绍 / ## 基本信息 / ## 核心特色",
+      "description": "章节命名不一致，使用'一句话介绍'而非'DOC-STANDARD 标准的'一句话描述'，使用'## 2.1' 编号式",
+      "suggestion": "统一为 DOC-STANDARD 规定的命名：'## 一句话描述 (One-liner)'，并使用'## 1. 概述'式结构（与 02/03 一致）"
+    },
+    {
+      "id": "P-ISSUE-013",
+      "type": "incomplete",
+      "location": "## 关于原型参考的说明",
+      "description": "Hollow Halls 的调研结论虽诚实，但放在概述文档中显得'做了一半'——玩家/老板看到这里会怀疑'这游戏到底抄谁的'",
+      "suggestion": "把'原型参考'移到'## 关联文档'或独立的'## 灵感来源'章节，正面展示 3 款参考游戏，并说'我们从 X 学了什么、为什么不直接抄'"
+    }
+  ],
+  "p3_issues": [
+    {
+      "id": "P-ISSUE-014",
+      "type": "nice_to_have",
+      "location": "整体",
+      "description": "建议添加 1-2 张概念图/GIF 链接到参考游戏，增强可读性",
+      "suggestion": "在'## 核心特色'后加 '> 配图：SwitchSlot 切换效果演示（建议附 GIF）'"
+    }
+  ],
+  "highlights": [
+    "核心机制'切换预制件槽位'概念清晰，4 条核心特色表达了'无战斗+无成长+无死亡+即时反馈'的关键差异化",
+    "对 Hollow Halls 的诚实调研结论，是质量保证的体现"
+  ],
+  "summary": "01-overview.md 当前 18/100 分（D 评级）。一句话描述超长（95字 vs ≤30字要求）、目标用户泛化、缺差异化卖点对比表、缺 Out of Scope、缺 6 个必填通用章节。这些都是 P0 阻断性问题——没有这些字段，新人无法照做、老板无法评估、玩家无法快速理解。建议打回重写为 v1.0，预期可提升到 80+ 分。",
+  "recommended_action": "打回重写"
+}

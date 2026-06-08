@@ -1,0 +1,113 @@
+{
+  "review_id": "REV-20260609-001-01-art",
+  "doc_id": "01-overview.md",
+  "doc_version": "v0.1（无version字段）",
+  "reviewer": "美术agent",
+  "reviewer_role": "art_director",
+  "review_time": "2026-06-09T00:50:00+08:00",
+  "verdict": "fail",
+  "score": 12,
+  "score_breakdown": {
+    "frontmatter": 4,
+    "meta": 0,
+    "config_table": 4,
+    "edge_cases": 0,
+    "acceptance_criteria": 0,
+    "references": 0,
+    "visual_aids": 0,
+    "risks": 0,
+    "changelog": 0,
+    "visual_consistency": 4
+  },
+  "p0_issues": [
+    {
+      "id": "A-ISSUE-001",
+      "type": "missing",
+      "location": "Frontmatter",
+      "description": "YAML Frontmatter 缺 version、status、owner",
+      "suggestion": "补全：version: v1.0, status: draft, owner: 美术总监"
+    },
+    {
+      "id": "A-ISSUE-002",
+      "type": "missing",
+      "location": "整体",
+      "description": "未引用 12-art-style.md 的任何视觉规范。概述文档应至少列出'视觉调性'，与 12-art-style.md 保持一致",
+      "suggestion": "新增'## 视觉调性'章节，至少提及：① 主色调 #1A1A2E（深蓝灰） / #2D2D44（地板） / #3D3D5C（实墙） ② 强调色 #00D4FF（槽位发光）+ #FF9500（出口发光） ③ 整体氛围'废弃研究设施 + 神秘感'"
+    },
+    {
+      "id": "A-ISSUE-003",
+      "type": "missing",
+      "location": "整体",
+      "description": "无 6 个通用必填章节（目的/范围/配置表/边界条件/验收标准/风险）",
+      "suggestion": "依次补全。其中'验收标准'对美术可加：'玩家第一眼看到主界面 5 秒内能识别房间是'废弃设施'风格'"
+    },
+    {
+      "id": "A-ISSUE-004",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'风格参考图'。DOC-STANDARD 2.12 要求 ≥3 张参考图 + 标注借鉴元素。概述文档应至少文字描述 3 款参考游戏",
+      "suggestion": "新增'## 风格参考'章节：① Dead Cells（借鉴：剪影轮廓 + 像素渲染） ② Gorogoa（借鉴：平面几何 + 拼贴感） ③ Inside/Limbo（借鉴：黑暗氛围 + 单光源）"
+    },
+    {
+      "id": "A-ISSUE-005",
+      "type": "inconsistency",
+      "location": "## 核心特色",
+      "description": "'即时反馈'是核心特色，但与 12-art-style.md 的视觉规范'槽位微弱脉冲发光（青色），切换时发光增强'未对齐。概述没说要'怎么反馈'，美术就不知道怎么实现'视觉反馈'",
+      "suggestion": "把'即时反馈'细化为视觉描述：'玩家每次切换槽位时，槽位从 #00D4FF 微脉冲变为强脉冲发光（80% → 100% 亮度，时长 200ms），同时对应预制件有 0.2s 形变动画'"
+    }
+  ],
+  "p1_issues": [
+    {
+      "id": "A-ISSUE-006",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'章节氛围'描述。3 个章节应有视觉/情绪递进",
+      "suggestion": "新增'## 章节视觉氛围'章节：Ch1 觉醒（明亮 + 蓝灰主调）/ Ch2 深掘（压抑 + 雾效 + 局部动态光）/ Ch3 迷途（迷失 + 强光影对比 + 视觉欺骗）"
+    },
+    {
+      "id": "A-ISSUE-007",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'UI 风格'描述",
+      "suggestion": "新增'## UI 风格'章节：极简主义 + 半透明悬浮面板 + 无边框 + 文字 #E0E0E0（与 12 一致）"
+    },
+    {
+      "id": "A-ISSUE-008",
+      "type": "missing",
+      "location": "整体",
+      "description": "无字体规范（虽然 12 提了'无衬线'，但概述应给顶层规范）",
+      "suggestion": "新增'## 字体规范'：中文思源黑体（Noto Sans CJK SC）/ 英文 Inter / 标题 24px / 正文 16px / 行距 1.5"
+    }
+  ],
+  "p2_issues": [
+    {
+      "id": "A-ISSUE-009",
+      "type": "vague",
+      "location": "## 一句话介绍",
+      "description": "'类银河恶魔城'是游戏类型术语，美术上不对应任何视觉元素（Metroidvania 在视觉上没有统一规范）",
+      "suggestion": "改为视觉驱动的描述：'低饱和度冷色调 2D 房间解谜' 或'剪影 + 几何拼贴风 2D 解谜'"
+    },
+    {
+      "id": "A-ISSUE-010",
+      "type": "incomplete",
+      "location": "## 关于原型参考的说明",
+      "description": "Hollow Halls 是'恐怖氛围'，本游戏是'废弃研究设施 + 神秘感'，氛围不同。概述应明确风格定位",
+      "suggestion": "在'## 视觉调性'章节明确：'我们做'神秘探索'氛围，不是'恐怖惊吓'氛围。区别于 Hollow Halls'"
+    }
+  ],
+  "p3_issues": [
+    {
+      "id": "A-ISSUE-011",
+      "type": "nice_to_have",
+      "location": "整体",
+      "description": "建议添加 1 张 ASCII 概念图描述典型房间布局",
+      "suggestion": "在'## 核心特色'后插入 ASCII 房间图：'[实墙] [槽位●] [实墙] [出口→]'"
+    }
+  ],
+  "highlights": [
+    "'无战斗'的设计主张在视觉上是友好的——可以减少敌人 AI 动画、伤害反馈等美术负担",
+    "'房间预制件切换'给了清晰的视觉锚点（玩家能看到'什么变成了什么'），便于美术设计视觉反馈"
+  ],
+  "summary": "01-overview.md 当前 12/100 分（D 评级）。从美术视角看，主要问题：① 未引用 12-art-style.md 的视觉规范（调色板、风格）② 无风格参考图描述 ③ 无章节视觉氛围 ④ 无 UI/字体规范 ⑤ 核心特色的'即时反馈'未与视觉反馈对齐。概述文档应给美术'顶层视觉规范'，否则 12 文档会被孤立。建议打回重写，补充'## 视觉调性''## 风格参考''## 章节视觉氛围''## UI 风格'四块。",
+  "recommended_action": "打回重写"
+}

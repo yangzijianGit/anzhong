@@ -1,0 +1,113 @@
+{
+  "review_id": "REV-20260609-001-01-tech",
+  "doc_id": "01-overview.md",
+  "doc_version": "v0.1（无version字段）",
+  "reviewer": "技术agent",
+  "reviewer_role": "tech_lead",
+  "review_time": "2026-06-09T00:50:00+08:00",
+  "verdict": "fail",
+  "score": 14,
+  "score_breakdown": {
+    "frontmatter": 4,
+    "meta": 0,
+    "config_table": 4,
+    "edge_cases": 0,
+    "acceptance_criteria": 0,
+    "references": 0,
+    "visual_aids": 0,
+    "risks": 0,
+    "changelog": 0,
+    "tech_consistency": 6
+  },
+  "p0_issues": [
+    {
+      "id": "T-ISSUE-001",
+      "type": "missing",
+      "location": "Frontmatter",
+      "description": "YAML Frontmatter 缺 version、status、owner 三个必填字段",
+      "suggestion": "补全：version: v1.0, status: draft, owner: 策划总监"
+    },
+    {
+      "id": "T-ISSUE-002",
+      "type": "inconsistency",
+      "location": "## 一句话介绍 / ## 核心特色",
+      "description": "未提及与 12-art-style.md 一致的技术栈（Unity 2D + URP + 2D Renderer + Tilemap）。概述文档应明确技术约束，避免后续文档偏离",
+      "suggestion": "新增'## 技术栈'章节，明确：Unity 2022 LTS / URP + 2D Renderer / Tilemap / Animator + DOTween / 输入：键盘+手柄 / 平台：Win/Mac/Linux"
+    },
+    {
+      "id": "T-ISSUE-003",
+      "type": "missing",
+      "location": "整体",
+      "description": "无性能预算（Performance Budget）。DOC-STANDARD 2.2 要求机制文档列性能约束，但概述文档也应给顶层预算，作为各机制文档的对齐基线",
+      "suggestion": "新增'## 性能预算'章节，列：① 帧率 ≥ 60 FPS（PC）/ 30 FPS（移动可选）② 切换响应 ≤ 16ms（1 帧）③ 单房间槽位数 ≤ 8 ④ 单场景 DrawCall ≤ 50 ⑤ 内存峰值 ≤ 512MB"
+    },
+    {
+      "id": "T-ISSUE-004",
+      "type": "missing",
+      "location": "整体",
+      "description": "无 6 个通用必填章节：目的、范围、配置表、边界条件、验收标准、风险",
+      "suggestion": "依次补全。其中'边界条件'应至少列 5 条技术边界：① 玩家在切换动画中退出房间 ② 帧率掉到 30FPS ③ 槽位依赖对象不存在 ④ 玩家快速连按切换键 ⑤ 存档损坏"
+    },
+    {
+      "id": "T-ISSUE-005",
+      "type": "inconsistency",
+      "location": "## 核心特色",
+      "description": "'无战斗''无死亡惩罚''无成长'是设计主张，但未与 02-core-mechanics.md 的 SwitchSlot 机制关联。技术实现时无法验证'无'（vs '低')",
+      "suggestion": "核心特色每条加'实现验证'：'无战斗'='代码层无 Enemy 类、无攻击碰撞回调'"
+    }
+  ],
+  "p1_issues": [
+    {
+      "id": "T-ISSUE-006",
+      "type": "missing",
+      "location": "整体",
+      "description": "无'关联代码模块'，无法直接对照代码",
+      "suggestion": "新增链接到 src/Room/（房间管理）、src/SwitchSlot/（槽位状态机）、src/Player/（玩家控制器）、src/SaveSystem/（存档）"
+    },
+    {
+      "id": "T-ISSUE-007",
+      "type": "missing",
+      "location": "整体",
+      "description": "无第三方依赖说明",
+      "suggestion": "新增'## 第三方依赖'章节：DOTween（MIT）、可选 FMOD / 自带 Audio"
+    },
+    {
+      "id": "T-ISSUE-008",
+      "type": "vague",
+      "location": "## 一句话介绍",
+      "description": "提到'房间预制件槽位（SwitchSlot）'但未解释技术原理：'槽位'是数据驱动还是硬编码？'预制件'是 Prefab 还是 ScriptableObject？这影响实现",
+      "suggestion": "一句话介绍后补'## 核心机制技术概要'，用 2-3 句说清：'SwitchSlot 是挂载在房间 GameObject 上的状态机，预制件是 ScriptableObject 化的房间组件'"
+    }
+  ],
+  "p2_issues": [
+    {
+      "id": "T-ISSUE-009",
+      "type": "naming",
+      "location": "## 基本信息",
+      "description": "类型'类银河恶魔城'与无战斗冲突——传统 Metroidvania 是战斗+成长，本游戏无战斗，应明确子类型命名",
+      "suggestion": "改为：'2D 房间解谜（Metroidvania-lite / Walking Simulator 混合型）'，并在关联文档说明"
+    },
+    {
+      "id": "T-ISSUE-010",
+      "type": "incomplete",
+      "location": "## 关于原型参考的说明",
+      "description": "Hollow Halls 调研结论放在概述文档，'技术未做'的结论易让工程师误解为'机制未确定'",
+      "suggestion": "把'原型参考'移到'## 灵感来源与差异'章节，明确技术方案：'我们不抄 Hollow Halls 的恐怖氛围，做 Gorogoa 风格的空间切换'"
+    }
+  ],
+  "p3_issues": [
+    {
+      "id": "T-ISSUE-011",
+      "type": "nice_to_have",
+      "location": "整体",
+      "description": "建议添加技术架构图（一张 Mermaid 图）展示 Room → SwitchSlot → Prefab 的关系",
+      "suggestion": "在'## 核心特色'后插入 Mermaid 图：Room (GameObject) → SwitchSlot (StateMachine) → Prefab (ScriptableObject)"
+    }
+  ],
+  "highlights": [
+    "核心机制'切换预制件槽位'与 12-art-style.md 的技术方案（URP + Tilemap + Animator + DOTween）技术上一致，不冲突",
+    "无战斗/无成长/无死亡的设计主张在技术上是可实现的（少一个 EnemyManager 系统）"
+  ],
+  "summary": "01-overview.md 当前 14/100 分（D 评级）。从技术视角看，主要问题：① 未声明技术栈（Unity/URP/Tilemap），与 12-art-style.md 未对齐 ② 无性能预算 ③ 无通用 6 章节 ④ 一句话描述超长且含技术名词'类银河恶魔城'易引起误解。建议打回重写，补充'## 技术栈''## 性能预算''## 核心机制技术概要'三块。",
+  "recommended_action": "打回重写"
+}
