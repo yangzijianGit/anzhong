@@ -1,0 +1,133 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 文档驱动开发 pre-commit hook
+# 检查：代码变更是否同步更新了关联的设计文档
+#
+# 阻断策略：
+#   - 代码文件(src/)缺少对应设计文档 → 阻断 (exit 1)
+#   - 设计文档状态为implemented但代码有变更 → 警告 (exit 0)
+#
+# --no-verify 边界：允许在紧急修复时绕过，但需明确知晓风险
+
+set -e
+
+echo "🔍 [pre-commit] 检查文档关联..."
+
+# 获取暂存的文件
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+CODE_FILES=$(echo "$STAGED_FILES" | grep -E '^src/|^design/|^docs/' || true)
+
+if [ -z "$STAGED_FILES" ]; then
+    echo "✅ [pre-commit] 无文件变更，跳过检查"
+    exit 0
+fi
+
+# 调用 Python 检查脚本
+python3 -c "
+import subprocess
+import sys
+import os
+import re
+from pathlib import Path
+
+PROJECT_ROOT = Path(os.environ.get('PROJECT_ROOT', '.'))
+
+def get_staged_code_files():
+    result = subprocess.run(
+        ['git', 'diff', '--cached', '--name-only', '--diff-filter=ACM'],
+        capture_output=True, text=True
+    )
+    return [f.strip() for f in result.stdout.strip().split('\n') if f.strip()]
+
+def get_design_docs():
+    design_dir = PROJECT_ROOT / 'design'
+    if not design_dir.exists():
+        return []
+    return list(design_dir.rglob('*.md'))
+
+def extract_module_name_from_doc(doc_path):
+    try:
+        content = doc_path.read_text(encoding='utf-8')
+        match = re.search(r'^#\s+(.+?)\s+代码设计文档', content, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+        match = re.search(r'^module_name:\s*(.+)$', content, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+    except Exception:
+        pass
+    return doc_path.stem
+
+def check_code_has_design(code_files, design_docs):
+    issues = []
+    design_dir = PROJECT_ROOT / 'design'
+    
+    doc_names = set()
+    for doc in design_docs:
+        doc_names.add(doc.stem.lower())
+        module_name = extract_module_name_from_doc(doc)
+        if module_name:
+            doc_names.add(module_name.lower())
+    
+    for code_file in code_files:
+        if not (code_file.startswith('src/') or code_file.startswith('design/')):
+            continue
+        
+        code_path = Path(code_file)
+        module_name = code_path.stem.lower()
+        parent_name = code_path.parent.name.lower()
+        
+        found = False
+        
+        expected_doc = design_dir / parent_name / f\"{code_path.stem}.md\"
+        if expected_doc.exists():
+            found = True
+        
+        if not found:
+            expected_doc = design_dir / f\"{code_path.stem}.md\"
+            if expected_doc.exists():
+                found = True
+        
+        if not found:
+            for doc in design_docs:
+                if doc.stem.lower() == module_name:
+                    found = True
+                    break
+        
+        if not found and code_file.startswith('src/'):
+            issues.append(
+                f'代码文件 {code_file} 缺少对应的设计文档\\n'
+                f'  → 请先在 design/ 目录下创建对应的代码设计文档\\n'
+                f'  → 参考 design/TEMPLATE.md 模板\\n'
+                f'  → 如需紧急提交，请使用: git commit --no-verify -m \"...\"'
+            )
+    
+    return issues
+
+code_files = get_staged_code_files()
+src_files = [f for f in code_files if f.startswith('src/') or f.startswith('design/')]
+
+if not src_files:
+    print('✅ [pre-commit] 无需文档检查的代码文件')
+    sys.exit(0)
+
+design_docs = get_design_docs()
+issues = check_code_has_design(code_files, design_docs)
+
+if issues:
+    print('=' * 60)
+    print('❌ PRE-COMMIT CHECK FAILED')
+    print('=' * 60)
+    for issue in issues:
+        print(f'\\n  {issue}')
+    print('\\n' + '=' * 60)
+    print('请先产出代码设计文档再提交代码。')
+    print('文档模板: design/TEMPLATE.md')
+    print('紧急情况可使用 --no-verify 绕过（但需尽快补全文档）')
+    print('=' * 60)
+    sys.exit(1)
+
+print('✅ [pre-commit] 文档关联检查通过')
+sys.exit(0)
+"
